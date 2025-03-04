@@ -84,32 +84,32 @@ public class SistemaGestionProyectos {
         while (true) {
             System.out.println("\n--- Sistema de Gestión de Proyectos ---");
             if (usuario.getNivelPermisos().equals("Administrador")) {
-                System.out.println("1. Crear proyecto");
-                System.out.println("2. Editar proyecto");
-                System.out.println("3. Eliminar proyecto");
-                System.out.println("4. Asignar miembros a un proyecto");
+                System.out.println("1. Crear equipo");
+                System.out.println("2. Eliminar equipo");
+                System.out.println("3. Ver equipos creados");
+                System.out.println("4. Ver equipos asignados");
                 System.out.println("5. Crear tarea");
                 System.out.println("6. Asignar tarea a miembro");
                 System.out.println("7. Actualizar estado de tarea");
                 System.out.println("8. Agregar comentario a tarea");
-                System.out.println("9. Generar informe de progreso");
-                System.out.println("10. Mensajería");
-                System.out.println("11. Crear equipo");
-                System.out.println("12. Generar reporte de desempeño");
-                System.out.println("13. Ver características de un proyecto");
-                System.out.println("14. Ver tareas");
-                System.out.println("15. Ver equipos creados");
-                System.out.println("16. Asignar tarea a proyecto");
-                System.out.println("17. Cambiar nivel de permisos de un miembro");
-                System.out.println("18. Ajustes de perfil");
-                System.out.println("19. Eliminar tarea");
-                System.out.println("20. Eliminar equipo");
-                System.out.println("21. Crear nuevo miembro");
-                System.out.println("22. Eliminar miembro");
-                System.out.println("23. Ver miembros disponibles");
-                System.out.println("24. Ver tareas asignadas");
-                System.out.println("25. Ver equipos asignados");
-                System.out.println("26. Ver proyectos asignados");
+                System.out.println("9. Eliminar tarea");
+                System.out.println("10. Ver tareas");
+                System.out.println("11. Ver tareas asignadas");
+                System.out.println("12. Generar informe de progreso");
+                System.out.println("13. Generar reporte de desempeño");
+                System.out.println("14. Crear proyecto");
+                System.out.println("15. Editar proyecto");
+                System.out.println("16. Eliminar proyecto");
+                System.out.println("17. Asignar miembros a un proyecto");
+                System.out.println("18. Asignar tarea a proyecto");
+                System.out.println("19. Ver características de un proyecto");
+                System.out.println("20. Ver proyectos asignados");
+                System.out.println("21. Mensajería");
+                System.out.println("22. Cambiar nivel de permisos de un miembro");
+                System.out.println("23. Ajustes de perfil");
+                System.out.println("24. Crear nuevo miembro");
+                System.out.println("25. Eliminar miembro");
+                System.out.println("26. Ver miembros disponibles");
                 System.out.println("27. Salir");
             } else {
                 System.out.println("1. Crear tarea");
@@ -132,40 +132,28 @@ public class SistemaGestionProyectos {
             switch (opcion) {
                 case 1:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.crearProyecto(scanner);
+                        gestorProyectos.crearEquipo(scanner, usuarios);
                     } else {
                         gestorProyectos.crearTarea(scanner);
                     }
                     break;
                 case 2:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.editarProyecto(scanner);
+                        eliminarEquipo(scanner, gestorProyectos);
                     } else {
                         gestorProyectos.asignarTareaAMiembro(scanner, usuarios, usuario);
                     }
                     break;
                 case 3:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.eliminarProyecto(scanner);
+                        gestorProyectos.verEquipos(scanner);
                     } else {
                         gestorProyectos.actualizarEstadoTarea(scanner);
                     }
                     break;
                 case 4:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        System.out.println("\n--- Proyectos Disponibles ---");
-                        for (int i = 0; i < gestorProyectos.getProyectos().size(); i++) {
-                            System.out.println((i + 1) + ". " + gestorProyectos.getProyectos().get(i).getNombre());
-                        }
-                        System.out.print("Seleccione el número del proyecto para asignar miembros: ");
-                        int opcionProyecto = scanner.nextInt();
-                        scanner.nextLine();
-                        if (opcionProyecto < 1 || opcionProyecto > gestorProyectos.getProyectos().size()) {
-                            System.out.println("Opción no válida.");
-                            continue;
-                        }
-                        Proyecto proyectoSeleccionado = gestorProyectos.getProyectos().get(opcionProyecto - 1);
-                        gestorProyectos.asignarMiembrosAProyecto(scanner, usuarios, usuario.getNombre(), proyectoSeleccionado);
+                        verEquiposAsignados(usuario, gestorProyectos);
                     } else {
                         gestorProyectos.agregarComentarioATarea(scanner);
                     }
@@ -200,7 +188,7 @@ public class SistemaGestionProyectos {
                     break;
                 case 9:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.generarInformeProgreso(scanner);
+                        eliminarTarea(scanner, gestorProyectos);
                     } else {
                         ajustesPerfil(scanner, usuario, gestorProyectos);
                     }
@@ -209,77 +197,85 @@ public class SistemaGestionProyectos {
                     if (usuario.getNivelPermisos().equals("Usuario")) {
                         verTareasAsignadas(usuario, gestorProyectos);
                     } else {
-                        menuMensajeria(scanner, gestorProyectos, usuario, usuarios);
+                        gestorProyectos.verTareas(scanner);
                     }
                     break;
                 case 11:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.crearEquipo(scanner, usuarios);
+                        verTareasAsignadas(usuario, gestorProyectos);
                     } else {
                         verEquiposAsignados(usuario, gestorProyectos);
                     }
                     break;
                 case 12:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.generarReporteDesempeño(scanner);
+                        gestorProyectos.generarInformeProgreso(scanner);
                     } else {
                         verProyectosAsignados(usuario, gestorProyectos);
                     }
                     break;
                 case 13:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
-                        gestorProyectos.verCaracteristicasProyecto(scanner, usuarios);
+                        gestorProyectos.generarReporteDesempeño(scanner);
                     } else {
                         System.out.println("Saliendo al menú de inicio de sesión...");
                         return;
                     }
                     break;
                 case 14:
-                    gestorProyectos.verTareas(scanner);
+                    gestorProyectos.crearProyecto(scanner);
                     break;
                 case 15:
-                    gestorProyectos.verEquipos(scanner);
+                    gestorProyectos.editarProyecto(scanner);
                     break;
                 case 16:
-                    asignarTareaAProyecto(scanner, gestorProyectos);
+                    gestorProyectos.eliminarProyecto(scanner);
                     break;
                 case 17:
-                    cambiarNivelPermisos(scanner, usuarios);
+                    System.out.println("\n--- Proyectos Disponibles ---");
+                        for (int i = 0; i < gestorProyectos.getProyectos().size(); i++) {
+                            System.out.println((i + 1) + ". " + gestorProyectos.getProyectos().get(i).getNombre());
+                        }
+                        System.out.print("Seleccione el número del proyecto para asignar miembros: ");
+                        int opcionProyecto = scanner.nextInt();
+                        scanner.nextLine();
+                        if (opcionProyecto < 1 || opcionProyecto > gestorProyectos.getProyectos().size()) {
+                            System.out.println("Opción no válida.");
+                            continue;
+                        }
+                        Proyecto proyectoSeleccionado = gestorProyectos.getProyectos().get(opcionProyecto - 1);
+                        gestorProyectos.asignarMiembrosAProyecto(scanner, usuarios, usuario.getNombre(), proyectoSeleccionado);
                     break;
                 case 18:
-                    ajustesPerfil(scanner, usuario, gestorProyectos);
+                    asignarTareaAProyecto(scanner, gestorProyectos);
                     break;
                 case 19:
-                    if (usuario.getNivelPermisos().equals("Administrador")) {
-                        eliminarTarea(scanner, gestorProyectos);
-                    }
+                    gestorProyectos.verCaracteristicasProyecto(scanner, usuarios);
                     break;
                 case 20:
-                    if (usuario.getNivelPermisos().equals("Administrador")) {
-                        eliminarEquipo(scanner, gestorProyectos);
-                    }
+                    verProyectosAsignados(usuario, gestorProyectos);
                     break;
                 case 21:
+                    menuMensajeria(scanner, gestorProyectos, usuario, usuarios);
+                    break;
+                case 22:
+                    cambiarNivelPermisos(scanner, usuarios);
+                    break;
+                case 23:
+                    ajustesPerfil(scanner, usuario, gestorProyectos);
+                    break;
+                case 24:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
                         crearNuevoMiembro(scanner, usuarios);
                     }
                     break;
-                case 22:
+                case 25:
                     if (usuario.getNivelPermisos().equals("Administrador")) {
                         eliminarMiembro(scanner, usuarios, gestorProyectos, usuario);
                     }
                     break;
-                case 23:
-                    verMiembrosDisponibles(usuarios, gestorProyectos);
-                    break;
-                case 24:
-                    verTareasAsignadas(usuario, gestorProyectos);
-                    break;
-                case 25:
-                    verEquiposAsignados(usuario, gestorProyectos);
-                    break;
                 case 26:
-                    verProyectosAsignados(usuario, gestorProyectos);
+                    verMiembrosDisponibles(usuarios, gestorProyectos);
                     break;
                 case 27:
                     System.out.println("Saliendo al menú de inicio de sesión...");
